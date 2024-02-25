@@ -1,2 +1,2 @@
 # sparkED
-sparkED: Your collaborative learning platform
+sparkED: Achieve your study goals with personalized revision.
