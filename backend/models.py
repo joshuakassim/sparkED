@@ -19,16 +19,21 @@ class User(db.Model):
         self.set_password(password)
 
     # Representation of user
-    def __repr__(self):
-        return f"User('{self.name}, {self.username}, {self.password}')"
+    # def __repr__(self):
+    #     return {
+    #         'id':  self.id,
+    #         'name': self.name,
+    #         'username': self.username,
+    #         'password': self.password
+    #     }
 
     # Convert user information to JSON
     def to_json(self):
         return {
-            "id":  self.id,
-            "name": self.name,
-            "username": self.username,
-            "password": self.password
+            'id':  self.id,
+            'name': self.name,
+            'username': self.username,
+            'password': self.password
         }
 
     # Ensure saved password and entered passwords match
@@ -49,3 +54,22 @@ class Flashcard(db.Model):
     answer: Mapped[str] = mapped_column(String(500), nullable=False)
     category: Mapped[str] = mapped_column(String(100), nullable=False)
     user_id: Mapped[int] = mapped_column(Integer, db.ForeignKey('user.id'),  nullable=False)
+
+    def __init__(self, question, answer, category, user_id):
+        self.question = question
+        self.answer = answer
+        self.category = category
+        self.user_id = user_id
+
+    def update(self, id, question, answer, category):
+        self.question = question
+        self.answer = answer
+        self.category = category
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'question': self.question,
+            'answer': self.answer,
+            'category': self.category
+        }
