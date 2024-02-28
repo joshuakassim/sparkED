@@ -1,6 +1,7 @@
 from flask import redirect, request, session
 from werkzeug.security import generate_password_hash
 from config import app, db
+from utils import login_required
 from models import User, Flashcard
 
 
@@ -48,18 +49,18 @@ def register():
     try:
         db.session.add(user)
         db.session.commit()
-        return user.to_json()
     except Exception as e:
-        return {'error':str(e)}, 500
+        return {'error':str(e)}
 
     # Set session
     session['user_id'] = user.id
 
-    return {'msg':"Registration successful"},
+    return {'msg':"Registration successful"}, 201
 
 
 # Update user profile
 @app.route('/profile', methods=['PUT'])
+@login_required
 def update_profile():
     """Update user profile"""
 
@@ -76,11 +77,12 @@ def update_profile():
     except Exception as e:
         return {'error':str(e)}, 500
 
-    return {'msg':'Profile updated'}
+    return {'msg':'Profile updated'}, 204
     
     
 # Get user profile
 @app.route('/profile', methods=['GET'])
+@login_required
 def get_profile():
     """Get logged in users profile"""
 
@@ -91,6 +93,7 @@ def get_profile():
 
 # Create flashcard
 @app.route('/flashcards', methods=['POST'])
+@login_required
 def create_flashcard():
     """Create a flashcard"""
 
@@ -110,6 +113,7 @@ def create_flashcard():
 
 # Update flashcard
 @app.route('/flashcards/<int:id>', methods=['PUT'])
+@login_required
 def update_flashcard(id):
     """Update a flashcard"""
 
@@ -126,11 +130,12 @@ def update_flashcard(id):
     except Exception as e:
         return {'error':str(e)}
 
-    return {'msg':'Flashcard updated'}, 201
+    return {'msg':'Flashcard updated'}, 204
 
 
 # Delete a flashcard
 @app.route('/flashcards/<int:id>', methods=['DELETE'])
+@login_required
 def delete_flashcard(id):
     """Delete a flashcard"""
 
@@ -144,10 +149,11 @@ def delete_flashcard(id):
     except Exception as e:
         return {'error': str(e)}
 
-    return  {'msg':'Flashcard deleted'}
+    return  {'msg':'Flashcard deleted'}, 204
 
 # Study flashcards
 @app.route('/study', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@login_required
 def study():
     """Study the flashcards that have been created buy the user"""
 
